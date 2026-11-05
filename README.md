@@ -88,4 +88,5 @@ En Pro Label Tool, crea una etiqueta con un QR y un texto, importa `labels.csv` 
 - `app/src/data/layout.json`: ubicaciones, rangos de LED y orden de recorrido. Hay 6 huecos de 8 LED por balda y se encienden los 6 centrales, así los huecos contiguos se distinguen. Las cuatro ubicaciones `A-01-1-0x` (cajones del almacén) comparten la luz de zona (96–107).
 - `app/src/data/items.seed.json`: 12 artículos (10 en balda y 2 en almacén).
 - El stock se guarda en el teléfono. Para repetir tomas de vídeo con el stock inicial: **Ajustes → Restaurar datos de demo**.
+- Diseño: Material 3 Expressive con Google Sans Flex y Google Sans Code (OFL, incluidas en la app, sin internet). Los iconos son un subconjunto de Material Symbols Rounded; si añades uno, edita la lista en `app/scripts/build-icons.py` y ejecútalo (`pip install fonttools brotli`).
 - Para conectar el software real de la tienda, implementa `StockProvider` (`app/src/stock/StockProvider.ts`) y cambia una línea en `app/src/main.ts`.

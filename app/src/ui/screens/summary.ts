@@ -1,67 +1,68 @@
 import type { App, Screen } from '../app';
 import { h, sheet, toast } from '../dom';
+import { icon } from '../icons';
+import { shape } from '../components/shapes';
+import { group, listItem, topBar } from '../components/list';
+import { locLeading } from './search';
 
 export function summaryScreen(app: App): Screen {
   const s = app.session!;
   const complete = s.steps.filter((st) => st.status === 'picked').length;
-  const issues = s.steps.filter((st) => st.status === 'short');
+  const issues = s.steps.filter((st) => st.status === 'short').length;
   const units = s.steps.reduce((a, st) => a + (st.picked ?? 0), 0);
 
   const body = h(
     'section',
     { class: 'pad' },
-    h('h1', { class: 'title' }, 'Recogida terminada'),
     h(
-      'dl',
-      { class: 'stats' },
-      h('div', null, h('dt', null, 'Líneas'), h('dd', { class: 'mono' }, String(s.steps.length))),
-      h('div', null, h('dt', null, 'Completas'), h('dd', { class: 'mono' }, String(complete))),
-      h('div', { class: issues.length ? 'is-danger' : '' }, h('dt', null, 'Incidencias'), h('dd', { class: 'mono' }, String(issues.length))),
-      h('div', null, h('dt', null, 'Unidades'), h('dd', { class: 'mono' }, String(units))),
+      'div',
+      { class: 'done' },
+      shape({ lobes: 12, depth: 0.06, cls: `shape--done${issues ? ' shape--warn' : ''}`, spin: true }, icon(issues ? 'warning' : 'done_all', { size: 44, fill: true })),
+      h('h1', { class: 'done__title' }, 'Recogida terminada'),
+      h('p', { class: 'done__sub' }, issues ? `${issues} ${issues === 1 ? 'línea incompleta' : 'líneas incompletas'}. Revisa antes de descontar.` : 'Todo cogido. Listo para descontar.'),
     ),
     h(
-      'table',
-      { class: 'table' },
-      h('thead', null, h('tr', null, h('th', null, 'Ubicación'), h('th', null, 'Artículo'), h('th', { class: 'num' }, 'Cogido'))),
-      h(
-        'tbody',
-        null,
-        s.steps.map((st) =>
-          h(
-            'tr',
-            { class: st.status === 'short' ? 'is-short' : '' },
-            h('td', { class: 'mono' }, st.locationCode),
-            h('td', null, h('div', null, st.name), h('div', { class: 'mono sub' }, st.sku)),
-            h(
-              'td',
-              { class: 'num mono' },
-              `${st.picked ?? 0} / ${st.requested}`,
-              st.status === 'short' ? h('div', { class: 'sub danger' }, `Faltan ${st.requested - (st.picked ?? 0)}`) : null,
-            ),
+      'div',
+      { class: 'stats' },
+      h('div', { class: 'stat stat--ok' }, h('span', { class: 'stat__n' }, String(complete)), h('span', null, 'Completas')),
+      h('div', { class: `stat${issues ? ' stat--err' : ''}` }, h('span', { class: 'stat__n' }, String(issues)), h('span', null, 'Incidencias')),
+      h('div', { class: 'stat' }, h('span', { class: 'stat__n' }, String(units)), h('span', null, 'Unidades')),
+    ),
+    group(
+      s.steps.map((st) =>
+        listItem({
+          leading: locLeading(st.locationCode),
+          headline: st.name,
+          supporting: [h('span', { class: 'code' }, st.locationCode), ' · ', h('span', { class: 'code' }, st.sku)],
+          trailing: h(
+            'div',
+            { class: `result${st.status === 'short' ? ' result--short' : ''}` },
+            h('span', { class: 'result__n' }, `${st.picked ?? 0}/${st.requested}`),
+            st.status === 'short' ? h('span', { class: 'result__note' }, `Faltan ${st.requested - (st.picked ?? 0)}`) : icon('check_circle', { size: 20, fill: true }),
           ),
-        ),
+        }),
       ),
     ),
   );
 
-  const finish = h('button', { class: 'btn btn--primary btn--block btn--xl', type: 'button' }, 'Terminar y descontar stock');
+  const finish = h('button', { class: 'btn btn--filled btn--xl rp', type: 'button' }, icon('task_alt', { size: 28 }), 'Terminar y descontar');
   finish.addEventListener('click', async () => {
     finish.disabled = true;
-    finish.textContent = 'Descontando…';
+    finish.lastChild!.textContent = 'Descontando…';
     const res = await app.stock.decrement(s.steps.map((st) => ({ sku: st.sku, qty: st.picked ?? 0 })));
     await app.lights.off();
     app.session = null;
     app.setList([]);
+    app.go('search');
     if (res.ok) toast(`Stock descontado · ${units} uds`);
     else toast(`Descontado con avisos: ${res.failed.map((f) => `${f.sku} (${f.reason})`).join(', ')}`, 'error');
-    app.go('search');
   });
 
   const discard = () => {
     const close = sheet(
       h(
         'div',
-        null,
+        { class: 'sheet__body' },
         h('h2', { class: 'sheet__title' }, '¿Salir sin descontar?'),
         h('p', { class: 'sheet__text' }, 'El stock no cambia. La lista se conserva.'),
         h(
@@ -70,7 +71,7 @@ export function summaryScreen(app: App): Screen {
           h(
             'button',
             {
-              class: 'btn btn--danger',
+              class: 'btn btn--danger btn--l rp',
               type: 'button',
               onclick: () => {
                 close();
@@ -81,17 +82,13 @@ export function summaryScreen(app: App): Screen {
             },
             'Salir sin descontar',
           ),
-          h('button', { class: 'btn btn--ghost', type: 'button', onclick: () => close() }, 'Cancelar'),
+          h('button', { class: 'btn btn--text rp', type: 'button', onclick: () => close() }, 'Cancelar'),
         ),
       ),
     );
   };
 
-  const actions = h(
-    'div',
-    { class: 'actions' },
-    finish,
-    h('button', { class: 'btn btn--ghost btn--block', type: 'button', onclick: discard }, 'Salir sin descontar'),
-  );
-  return { body, actions };
+  const top = topBar({ title: 'Resumen', trailing: app.statusChip() });
+  const actions = h('div', { class: 'actions' }, finish, h('button', { class: 'btn btn--text rp', type: 'button', onclick: discard }, 'Salir sin descontar'));
+  return { top, body, actions };
 }

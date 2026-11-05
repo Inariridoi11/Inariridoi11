@@ -4,6 +4,7 @@ import type { LightService, LinkState } from '../lights';
 import { layout } from '../layout/LayoutMap';
 import { saveList, saveSettings } from '../settings/settings';
 import { clear, h } from './dom';
+import { icon, type IconName } from './icons';
 import { ledStrip } from './components/ledStrip';
 import { searchScreen } from './screens/search';
 import { listScreen } from './screens/list';
@@ -14,8 +15,10 @@ import { settingsScreen } from './screens/settings';
 export type Route = 'search' | 'list' | 'pick' | 'summary' | 'settings';
 
 export interface Screen {
+  top: HTMLElement;
   body: HTMLElement;
   actions?: HTMLElement | null;
+  fab?: HTMLElement | null;
   onLeave?: () => void;
 }
 
@@ -30,23 +33,35 @@ export interface App {
   render(): void;
   updateSettings(patch: Partial<Settings>): Promise<void>;
   setList(list: PickListLine[]): void;
+  /** Chip de estado de la tira (se reutiliza en las barras superiores). */
+  statusChip(): HTMLElement;
 }
 
-const STATE_TEXT: Record<LinkState, string> = {
-  hardware: 'Tira conectada',
-  sim: 'Simulador',
-  offline: 'Sin conexión',
-  checking: 'Conectando…',
+const LINK: Record<LinkState, { text: string; icon: IconName }> = {
+  hardware: { text: 'Tira conectada', icon: 'sensors' },
+  sim: { text: 'Simulador', icon: 'memory' },
+  offline: { text: 'Sin conexión', icon: 'light_off' },
+  checking: { text: 'Conectando', icon: 'router' },
 };
+
+const NAV: { route: Route; label: string; icon: IconName }[] = [
+  { route: 'search', label: 'Buscar', icon: 'search' },
+  { route: 'list', label: 'Lista', icon: 'checklist' },
+  { route: 'settings', label: 'Ajustes', icon: 'settings' },
+];
 
 export function createApp(root: HTMLElement, deps: { stock: StockProvider; lights: LightService; settings: Settings; list: PickListLine[] }): App {
   const strip = ledStrip(deps.lights.sim, layout);
-  const header = h('header', { class: 'topbar' });
+  const topSlot = h('div', { class: 'top-slot' });
   const stripSlot = h('div', { class: 'strip-slot' });
   const main = h('main', { class: 'screen' });
-  const actions = h('footer', { class: 'actionbar' });
-  root.append(header, stripSlot, main, actions);
+  const fabSlot = h('div', { class: 'fab-slot' });
+  const actions = h('div', { class: 'actionbar' });
+  const nav = h('nav', { class: 'navbar', 'aria-label': 'Secciones' });
+  const dock = h('footer', { class: 'dock' }, fabSlot, actions, nav);
+  root.append(topSlot, main, dock);
 
+  const chip = h('div', { class: 'status' });
   let current: Screen | null = null;
 
   const app: App = {
@@ -54,21 +69,29 @@ export function createApp(root: HTMLElement, deps: { stock: StockProvider; light
     session: null,
     route: 'search',
     go(route) {
+      document.querySelectorAll('.snackbar').forEach((t) => t.remove());
       app.route = route;
       app.render();
       main.scrollTop = 0;
     },
     render() {
       current?.onLeave?.();
-      renderHeader();
-      renderStrip();
       const screen = buildScreen(app);
       current = screen;
+      clear(topSlot);
+      topSlot.append(screen.top, stripSlot);
+      renderStrip();
       clear(main);
       main.append(screen.body);
+      main.classList.remove('is-enter');
+      void main.offsetWidth;
+      main.classList.add('is-enter');
       clear(actions);
       if (screen.actions) actions.append(screen.actions);
       actions.hidden = !screen.actions;
+      clear(fabSlot);
+      if (screen.fab) fabSlot.append(screen.fab);
+      renderNav();
     },
     async updateSettings(patch) {
       Object.assign(app.settings, patch);
@@ -77,40 +100,42 @@ export function createApp(root: HTMLElement, deps: { stock: StockProvider; light
     setList(list) {
       app.list = list;
       void saveList(list);
-      renderHeader();
+      renderNav();
+    },
+    statusChip() {
+      renderChip();
+      return chip;
     },
   };
 
-  function renderHeader() {
-    clear(header);
+  function renderChip() {
     const st = app.lights.state;
-    const status = h(
-      'div',
-      { class: `link link--${st}`, title: app.settings.host },
-      h('span', { class: 'link__dot', 'aria-hidden': 'true' }),
-      h('span', null, STATE_TEXT[st]),
-    );
-    const inPick = app.route === 'pick' || app.route === 'summary';
-    const top = h('div', { class: 'topbar__row' }, h('div', { class: 'brand' }, 'PickLED'), status);
-    header.append(top);
-    if (!inPick) {
-      const count = app.list.length;
-      const tab = (r: Route, label: string, extra?: string) =>
-        h(
+    chip.className = `status status--${st}`;
+    chip.title = app.settings.host;
+    chip.replaceChildren(icon(LINK[st].icon, { size: 18, fill: st === 'hardware' }), h('span', null, LINK[st].text));
+  }
+
+  function renderNav() {
+    const show = app.route === 'search' || app.route === 'list' || app.route === 'settings';
+    nav.hidden = !show;
+    if (!show) return;
+    nav.replaceChildren(
+      ...NAV.map((n) => {
+        const active = app.route === n.route;
+        const badge = n.route === 'list' && app.list.length ? h('span', { class: 'badge' }, String(app.list.length)) : null;
+        return h(
           'button',
           {
-            class: `tab${app.route === r ? ' is-active' : ''}`,
+            class: `nav-item${active ? ' is-active' : ''}`,
             type: 'button',
-            'aria-current': app.route === r ? 'page' : undefined,
-            onclick: () => app.go(r),
+            'aria-current': active ? 'page' : undefined,
+            onclick: () => !active && app.go(n.route),
           },
-          label,
-          extra ? h('span', { class: 'tab__count mono' }, extra) : null,
+          h('span', { class: 'nav-item__ind rp' }, icon(n.icon, { fill: active }), badge),
+          h('span', { class: 'nav-item__label' }, n.label),
         );
-      header.append(
-        h('nav', { class: 'tabs' }, tab('search', 'Buscar'), tab('list', 'Lista', count ? String(count) : undefined), tab('settings', 'Ajustes')),
-      );
-    }
+      }),
+    );
   }
 
   function renderStrip() {
@@ -125,7 +150,7 @@ export function createApp(root: HTMLElement, deps: { stock: StockProvider; light
   }
 
   app.lights.onChange(() => {
-    renderHeader();
+    renderChip();
     renderStrip();
   });
 
@@ -145,4 +170,9 @@ function buildScreen(app: App): Screen {
     case 'settings':
       return settingsScreen(app);
   }
+}
+
+/** Marca de la app para las barras superiores. */
+export function brand(): HTMLElement {
+  return h('div', { class: 'brand' }, h('span', null, 'Pick'), h('b', null, 'LED'));
 }

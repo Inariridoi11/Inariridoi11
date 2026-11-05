@@ -1,9 +1,7 @@
-import '@fontsource/ibm-plex-sans/400.css';
-import '@fontsource/ibm-plex-sans/500.css';
-import '@fontsource/ibm-plex-sans/600.css';
-import '@fontsource/ibm-plex-mono/400.css';
-import '@fontsource/ibm-plex-mono/600.css';
+import '@fontsource-variable/google-sans-flex/full.css';
+import '@fontsource-variable/google-sans-code';
 import './styles/base.css';
+import { installRipple } from './ui/ripple';
 
 import { LocalStockProvider } from './stock/LocalStockProvider';
 import { LightService } from './lights';
@@ -12,6 +10,7 @@ import { loadList, loadSettings } from './settings/settings';
 import { createApp } from './ui/app';
 
 async function boot() {
+  installRipple();
   const settings = await loadSettings();
   const list = await loadList();
 

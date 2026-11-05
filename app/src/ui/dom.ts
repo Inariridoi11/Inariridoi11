@@ -33,32 +33,44 @@ export function clear(el: Element) {
   while (el.firstChild) el.removeChild(el.firstChild);
 }
 
-/** Aviso breve en la parte inferior. */
+/** Snackbar de Material 3. */
 export function toast(msg: string, kind: 'info' | 'error' = 'info') {
-  document.querySelectorAll('.toast').forEach((t) => t.remove());
-  const el = h('div', { class: `toast toast--${kind}`, role: 'status' }, msg);
-  // Justo encima de la barra de acciones, sin tapar botones ni la tira.
-  const bar = document.querySelector<HTMLElement>('.actionbar');
-  if (bar && !bar.hidden) el.style.bottom = `${bar.offsetHeight + 12}px`;
-  else el.style.bottom = '';
+  document.querySelectorAll('.snackbar').forEach((t) => t.remove());
+  const el = h('div', { class: `snackbar snackbar--${kind}`, role: 'status' }, msg);
+  // Encima del dock y, si lo hay, del FAB.
+  const dock = document.querySelector<HTMLElement>('.dock');
+  const fab = document.querySelector<HTMLElement>('.fab-slot .fab:not([hidden])');
+  el.style.bottom = `${(dock?.offsetHeight ?? 0) + (fab ? fab.offsetHeight + 16 : 0) + 12}px`;
   document.body.append(el);
   requestAnimationFrame(() => el.classList.add('is-in'));
   setTimeout(() => {
     el.classList.remove('is-in');
-    setTimeout(() => el.remove(), 200);
-  }, 2200);
+    setTimeout(() => el.remove(), 250);
+  }, 2400);
 }
 
-/** Hoja modal inferior. Devuelve una función para cerrarla. */
+/** Hoja modal inferior de Material 3. Devuelve una función para cerrarla. */
 export function sheet(content: HTMLElement, onClose?: () => void): () => void {
-  const backdrop = h('div', { class: 'sheet-backdrop' });
-  const panel = h('div', { class: 'sheet', role: 'dialog', 'aria-modal': 'true' }, content);
+  document.querySelectorAll('.snackbar').forEach((t) => t.remove());
+  const scrim = h('div', { class: 'scrim' });
+  const panel = h('div', { class: 'sheet', role: 'dialog', 'aria-modal': 'true' }, h('div', { class: 'sheet__handle', 'aria-hidden': 'true' }), content);
+  let closed = false;
   const close = () => {
-    backdrop.remove();
-    panel.remove();
+    if (closed) return;
+    closed = true;
+    scrim.classList.remove('is-in');
+    panel.classList.remove('is-in');
+    setTimeout(() => {
+      scrim.remove();
+      panel.remove();
+    }, 260);
     onClose?.();
   };
-  backdrop.addEventListener('click', close);
-  document.body.append(backdrop, panel);
+  scrim.addEventListener('click', close);
+  document.body.append(scrim, panel);
+  requestAnimationFrame(() => {
+    scrim.classList.add('is-in');
+    panel.classList.add('is-in');
+  });
   return close;
 }

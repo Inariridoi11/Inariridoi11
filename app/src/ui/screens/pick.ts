@@ -5,9 +5,12 @@ import { ERROR_COLOR } from '../../settings/settings';
 import { scanCode, typeCode } from '../../scan/Scanner';
 import type { App, Screen } from '../app';
 import { clear, h, sheet, toast } from '../dom';
+import { icon } from '../icons';
 import { stepper } from '../components/stepper';
+import { shape, wavyProgress } from '../components/shapes';
+import { topBar } from '../components/list';
 
-// Último paso que ya se ha iluminado, para no repetir la animación al redibujar.
+// Último paso ya iluminado, para no repetir la animación al redibujar.
 let entered: { session: PickSession; index: number } | null = null;
 
 function enterStep(app: App, s: PickSession) {
@@ -30,6 +33,9 @@ export function pickScreen(app: App): Screen {
   const s = app.session!;
   const body = h('section', { class: 'pick' });
   const actions = h('div', { class: 'actions' });
+  const counter = h('span', { class: 'step-pill code' });
+  const progressSlot = h('div', { class: 'pick__progress' });
+  let progress: { el: HTMLElement; stop: () => void } | null = null;
   let error: string | null = null;
   let busy = false;
 
@@ -54,6 +60,7 @@ export function pickScreen(app: App): Screen {
     } else {
       const loc = getLocation(step.locationCode);
       void app.lights.flash(loc.leds, ERROR_COLOR, 4);
+      if (navigator.vibrate) navigator.vibrate([60, 60, 60]);
       error = code.trim();
       draw();
     }
@@ -78,17 +85,17 @@ export function pickScreen(app: App): Screen {
     const close = sheet(
       h(
         'div',
-        null,
+        { class: 'sheet__body' },
         h('h2', { class: 'sheet__title' }, 'No hay suficiente'),
-        h('p', { class: 'sheet__text' }, `Pedidas ${step.requested}. ¿Cuántas has cogido?`),
-        stepper({ value: qty, min: 0, max: step.requested - 1, large: true, onChange: (v) => (qty = v) }),
+        h('p', { class: 'sheet__text' }, `Se piden ${step.requested}. ¿Cuántas has cogido?`),
+        stepper({ value: qty, min: 0, max: step.requested - 1, size: 'l', onChange: (v) => (qty = v) }),
         h(
           'div',
           { class: 'sheet__actions' },
           h(
             'button',
             {
-              class: 'btn btn--primary',
+              class: 'btn btn--filled btn--l rp',
               type: 'button',
               onclick: () => {
                 step.status = 'short';
@@ -99,7 +106,7 @@ export function pickScreen(app: App): Screen {
             },
             'Confirmar y seguir',
           ),
-          h('button', { class: 'btn btn--ghost', type: 'button', onclick: () => close() }, 'Cancelar'),
+          h('button', { class: 'btn btn--text rp', type: 'button', onclick: () => close() }, 'Cancelar'),
         ),
       ),
     );
@@ -109,7 +116,7 @@ export function pickScreen(app: App): Screen {
     const close = sheet(
       h(
         'div',
-        null,
+        { class: 'sheet__body' },
         h('h2', { class: 'sheet__title' }, '¿Salir de la recogida?'),
         h('p', { class: 'sheet__text' }, 'No se descuenta stock. La lista se conserva.'),
         h(
@@ -118,7 +125,7 @@ export function pickScreen(app: App): Screen {
           h(
             'button',
             {
-              class: 'btn btn--danger',
+              class: 'btn btn--danger btn--l rp',
               type: 'button',
               onclick: () => {
                 close();
@@ -130,7 +137,7 @@ export function pickScreen(app: App): Screen {
             },
             'Salir',
           ),
-          h('button', { class: 'btn btn--ghost', type: 'button', onclick: () => close() }, 'Seguir recogiendo'),
+          h('button', { class: 'btn btn--text rp', type: 'button', onclick: () => close() }, 'Seguir recogiendo'),
         ),
       ),
     );
@@ -140,65 +147,77 @@ export function pickScreen(app: App): Screen {
     const step = s.steps[s.current];
     const loc = getLocation(step.locationCode);
     const zone = loc.kind === 'zone';
+    counter.textContent = `${s.current + 1} / ${s.steps.length}`;
+    progress?.stop();
+    progress = wavyProgress((s.current + 1) / s.steps.length);
+    progressSlot.replaceChildren(progress.el);
     clear(body);
     clear(actions);
 
     body.append(
       h(
         'div',
-        { class: 'pick__head' },
-        h('div', { class: 'pick__count' }, h('b', { class: 'mono' }, `${s.current + 1}`), h('span', { class: 'mono' }, ` / ${s.steps.length}`)),
-        h('button', { class: 'btn btn--ghost btn--compact', type: 'button', onclick: exitSheet }, 'Salir'),
-      ),
-      h(
-        'ol',
-        { class: 'progress', 'aria-label': 'Progreso' },
-        s.steps.map((st, i) =>
-          h('li', {
-            class: i === s.current ? 'is-current' : st.status === 'short' ? 'is-short' : st.status === 'picked' ? 'is-done' : '',
-          }),
+        { class: `hero${zone ? ' hero--zone' : ''}` },
+        h(
+          'div',
+          { class: 'hero__label' },
+          icon(zone ? 'inventory_2' : 'shelves', { size: 20, fill: true }),
+          zone ? 'Almacén · cajón sin luz propia' : 'Ve a la ubicación',
         ),
-      ),
-      h(
-        'div',
-        { class: `loc-block${zone ? ' is-zone' : ''}` },
-        h('div', { class: 'label' }, zone ? 'Almacén · cajón sin luz' : 'Ubicación'),
-        h('div', { class: 'loc-block__code mono' }, step.locationCode),
+        h('div', { class: 'hero__code code' }, step.locationCode),
         h(
           'dl',
-          { class: 'loc-block__parts' },
-          describeLocation(step.locationCode).map((p) => h('div', null, h('dt', null, p.label), h('dd', { class: 'mono' }, p.value))),
+          { class: 'hero__parts' },
+          describeLocation(step.locationCode).map((p) => h('div', null, h('dt', null, p.label), h('dd', { class: 'code' }, p.value))),
         ),
+        zone ? h('p', { class: 'hero__note' }, icon('lightbulb', { size: 18, fill: true }), 'Luz de zona encendida. Busca el cajón por su código.') : null,
       ),
       h(
         'div',
-        { class: 'pick__body' },
-        h('div', { class: 'qty' }, h('div', { class: 'label' }, 'Coger'), h('div', { class: 'qty__n mono' }, String(step.requested)), h('div', { class: 'qty__u' }, 'uds')),
-        h('div', { class: 'pick__item' }, h('div', { class: 'pick__name' }, step.name), h('div', { class: 'mono pick__sku' }, step.sku)),
+        { class: 'pick__row' },
+        shape({ lobes: 9, cls: 'shape--qty' }, h('span', { class: 'qty__label' }, 'Coger'), h('span', { class: 'qty__n' }, String(step.requested)), h('span', { class: 'qty__u' }, 'uds')),
+        h('div', { class: 'pick__item' }, h('div', { class: 'pick__name' }, step.name), h('span', { class: 'tag code' }, step.sku)),
       ),
       error
         ? h(
             'div',
             { class: 'alert', role: 'alert' },
-            h('b', null, 'Código incorrecto'),
-            h('span', null, 'Leído: ', h('span', { class: 'mono' }, error)),
-            h('span', null, 'Escanea ', h('span', { class: 'mono' }, step.locationCode), ' o ', h('span', { class: 'mono' }, step.sku), '.'),
+            icon('error', { fill: true }),
+            h(
+              'div',
+              null,
+              h('b', null, 'Ese código no es de este paso'),
+              h('p', null, 'Leído: ', h('span', { class: 'code' }, error)),
+              h('p', null, 'Escanea ', h('span', { class: 'code' }, step.locationCode), ' o ', h('span', { class: 'code' }, step.sku)),
+            ),
           )
         : '',
     );
 
     actions.append(
-      h('button', { class: 'btn btn--primary btn--block btn--xl', type: 'button', onclick: () => void doScan() }, error ? 'Escanear de nuevo' : 'Cogido'),
+      h(
+        'button',
+        { class: `btn btn--filled btn--xl rp${error ? ' btn--danger' : ''}`, type: 'button', onclick: () => void doScan() },
+        icon('qr_code_scanner', { size: 30 }),
+        error ? 'Escanear de nuevo' : 'Cogido',
+      ),
       h(
         'div',
-        { class: 'row' },
-        h('button', { class: 'btn btn--secondary', type: 'button', onclick: shortSheet }, 'No hay suficiente'),
-        h('button', { class: 'btn btn--ghost', type: 'button', onclick: () => void doScan(true) }, 'Teclear código'),
+        { class: 'btn-row' },
+        h('button', { class: 'btn btn--tonal rp', type: 'button', onclick: shortSheet }, 'No hay suficiente'),
+        h('button', { class: 'btn btn--text rp', type: 'button', onclick: () => void doScan(true) }, icon('keyboard'), 'Teclear'),
       ),
     );
   };
 
+  const top = topBar({
+    leading: h('button', { class: 'icon-btn rp', type: 'button', 'aria-label': 'Salir de la recogida', onclick: exitSheet }, icon('close')),
+    title: 'Recogida',
+    trailing: counter,
+  });
+  top.append(progressSlot);
+
   draw();
   enterStep(app, s);
-  return { body, actions };
+  return { top, body, actions, onLeave: () => progress?.stop() };
 }

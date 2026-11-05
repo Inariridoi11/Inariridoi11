@@ -5,6 +5,7 @@ import {
   GoogleBarcodeScannerModuleInstallState,
 } from '@capacitor-mlkit/barcode-scanning';
 import { h, sheet } from '../ui/dom';
+import { icon } from '../ui/icons';
 
 export interface ScanHints {
   /** Códigos válidos para este paso (para los atajos de prueba sin cámara). */
@@ -45,7 +46,7 @@ async function ensureModule(): Promise<void> {
     return;
   }
   const status = h('p', { class: 'sheet__text' }, 'Descargando módulo de escaneo…');
-  const close = sheet(h('div', null, h('h2', { class: 'sheet__title' }, 'Preparando escáner'), status));
+  const close = sheet(h('div', { class: 'sheet__body' }, h('h2', { class: 'sheet__title' }, 'Preparando escáner'), status));
   try {
     await new Promise<void>((resolve, reject) => {
       void BarcodeScanner.addListener('googleBarcodeScannerModuleInstallProgress', (ev) => {
@@ -76,13 +77,14 @@ function manualEntry(hints: ScanHints, showTestButtons: boolean): Promise<string
       resolve(v);
     };
     const input = h('input', {
-      class: 'input mono',
+      class: 'field__input code',
+      id: 'code',
       type: 'text',
       inputmode: 'text',
       autocapitalize: 'characters',
       autocomplete: 'off',
       spellcheck: 'false',
-      placeholder: 'Ubicación o SKU',
+      placeholder: hints.valid[0] ?? 'G-01-1-03',
       'aria-label': 'Código',
     });
     input.addEventListener('keydown', (e) => {
@@ -92,32 +94,32 @@ function manualEntry(hints: ScanHints, showTestButtons: boolean): Promise<string
     const content = h(
       'form',
       {
-        class: 'sheet__form',
+        class: 'sheet__body',
         onsubmit: (e: Event) => {
           e.preventDefault();
           if (input.value.trim()) finish(input.value);
         },
       },
       h('h2', { class: 'sheet__title' }, hints.title),
-      input,
+      h('div', { class: 'field' }, h('label', { class: 'field__label', for: 'code' }, 'Ubicación o SKU'), input),
       showTestButtons
         ? h(
             'div',
             { class: 'sheet__test' },
-            h('p', { class: 'label' }, 'Sin cámara · prueba'),
+            h('p', { class: 'label-l' }, 'Sin cámara · simular lectura'),
             h(
               'div',
-              { class: 'row' },
-              h('button', { class: 'btn btn--secondary', type: 'button', onclick: () => finish(hints.valid[0]) }, 'Código correcto'),
-              h('button', { class: 'btn btn--secondary', type: 'button', onclick: () => finish('G-99-9-99') }, 'Código erróneo'),
+              { class: 'btn-row' },
+              h('button', { class: 'btn btn--tonal rp', type: 'button', onclick: () => finish(hints.valid[0]) }, icon('check'), 'Código correcto'),
+              h('button', { class: 'btn btn--outlined rp', type: 'button', onclick: () => finish('G-99-9-99') }, icon('close'), 'Código erróneo'),
             ),
           )
         : null,
       h(
         'div',
         { class: 'sheet__actions' },
-        h('button', { class: 'btn btn--primary', type: 'submit' }, 'Aceptar'),
-        h('button', { class: 'btn btn--ghost', type: 'button', onclick: () => finish(null) }, 'Cancelar'),
+        h('button', { class: 'btn btn--filled btn--l rp', type: 'submit' }, 'Aceptar'),
+        h('button', { class: 'btn btn--text rp', type: 'button', onclick: () => finish(null) }, 'Cancelar'),
       ),
     );
     const close = sheet(content, () => {
