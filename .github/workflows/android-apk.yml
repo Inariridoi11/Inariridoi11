@@ -1,0 +1,54 @@
+name: APK demo
+
+on:
+  push:
+    paths:
+      - 'app/**'
+      - '.github/workflows/android-apk.yml'
+  workflow_dispatch:
+    inputs:
+      esp32_ip:
+        description: 'IP del ESP32 (se permite HTTP solo hacia ella)'
+        required: false
+        default: '192.168.1.50'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: android-actions/setup-android@v3
+
+      - run: npm ci
+
+      - name: IP del ESP32
+        if: github.event_name == 'workflow_dispatch'
+        run: npm run set-ip -- "${{ inputs.esp32_ip }}"
+
+      - run: npm run build
+      - run: npx cap sync android
+
+      - name: Compilar APK (debug)
+        working-directory: app/android
+        run: chmod +x gradlew && ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pickled-demo-apk
+          path: app/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
