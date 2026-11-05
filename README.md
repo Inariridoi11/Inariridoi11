@@ -58,6 +58,14 @@ npm run android                  # compila, sincroniza e instala en el Pixel con
 
 La primera vez que se escanea, Android descarga el módulo de escaneo de Google (unos segundos, con internet).
 
+### APK ya compilado (sin Android Studio)
+
+Cada push que toca `app/` compila un APK en GitHub Actions (workflow **APK demo**). Para descargarlo: pestaña Actions del repositorio → la ejecución más reciente → **Artifacts** → `pickled-demo-apk`. Dentro del zip viene `app-debug.apk`.
+
+Para compilarlo con otra IP del ESP32: Actions → **APK demo** → **Run workflow** e indica la IP.
+
+Para instalarlo en el Pixel, ábrelo desde Archivos y permite "Instalar apps desconocidas", o por USB: `adb install -r app-debug.apk`.
+
 ## 3. Simulador
 
 La app pinta en pantalla una tira de 108 LED con las mismas animaciones que el firmware (`app/src/lights/engine.ts` es un port de `led_engine.cpp`).
