@@ -34,6 +34,9 @@ export const ICONS = {
   shopping_basket: '\u{e8cb}',
   package_2: '\u{f569}',
   done_all: '\u{e877}',
+  lock: '\u{e88d}',
+  lock_open: '\u{e898}',
+  backspace: '\u{e14a}',
 } as const;
 
 export type IconName = keyof typeof ICONS;

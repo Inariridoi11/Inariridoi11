@@ -9,7 +9,7 @@ from fontTools import subset
 ICONS = """search close add remove checklist settings qr_code_scanner keyboard inventory_2 shelves
 check check_circle error arrow_back lightbulb router palette speed light_mode restart_alt play_arrow
 delete power_settings_new memory task_alt chevron_right edit sensors light_off list_alt warning
-shopping_basket package_2 done_all""".split()
+shopping_basket package_2 done_all lock lock_open backspace""".split()
 
 root = Path(__file__).resolve().parent.parent
 src = root / 'node_modules/@fontsource-variable/material-symbols-rounded/files/material-symbols-rounded-latin-full-normal.woff2'

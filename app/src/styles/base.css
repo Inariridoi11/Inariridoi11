@@ -473,9 +473,15 @@ ol {
   display: flex;
   gap: 12px;
 }
+.btn-row {
+  flex-wrap: wrap;
+}
 .btn-row > .btn {
-  flex: 1 1 0;
+  flex: 1 1 auto;
   min-width: 0;
+}
+.btn {
+  max-width: 100%;
 }
 
 .icon-btn {
@@ -694,12 +700,17 @@ ol {
 }
 .chips {
   display: flex;
+  margin: 0 -20px;
+  padding-left: 20px !important;
+  padding-right: 20px;
+  scroll-padding: 0 20px;
   gap: 8px;
   overflow-x: auto;
   padding: 14px 0 0;
   scrollbar-width: none;
 }
 .chip {
+  flex: 0 0 auto;
   height: 34px;
   padding: 0 14px;
   border-radius: var(--r-s);
@@ -772,12 +783,17 @@ ol {
   color: var(--on-surface-variant);
   margin-top: 4px;
 }
+.li__sup {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 12px;
+  row-gap: 2px;
+}
 .li__sup > span {
   white-space: nowrap;
-}
-.li__sup > span + span::before {
-  content: '·';
-  margin: 0 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 .li__trail {
   flex: 0 0 auto;
@@ -799,6 +815,15 @@ ol {
   font-weight: 650;
   color: var(--primary);
   margin: 32px 20px 12px;
+}
+.group-title--row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 36px;
+}
+.group-title--row .btn {
+  margin-right: -12px;
 }
 .group-title:first-child {
   margin-top: 8px;
@@ -1297,13 +1322,12 @@ ol {
   align-items: center;
   justify-content: center;
 }
-.set-icon.tone-amber,
-.set-icon.tone-err {
+.set-icon.tone-alt {
   background: var(--secondary-container);
   color: var(--on-secondary-container);
 }
 .li:has(.set-icon) .li__below {
-  padding-left: 58px;
+  padding-left: 0;
 }
 .connected {
   display: flex;
@@ -1390,13 +1414,16 @@ ol {
 }
 
 .swatches {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 48px));
+  justify-content: space-between;
+  gap: 8px;
 }
 .swatch {
-  width: 48px;
-  height: 48px;
+  width: 100%;
+  max-width: 48px;
+  aspect-ratio: 1;
+  height: auto;
   border: 0;
   border-radius: var(--r-full);
   background: var(--c);
@@ -1599,4 +1626,99 @@ ol {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ---------- PIN y confirmación por pulsación larga ---------- */
+.pin-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.pin-msg {
+  margin-top: 12px;
+}
+.pin-dots {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin: 8px 0 24px;
+}
+.pin-dots.is-wrong {
+  animation: shake 0.4s var(--emph);
+}
+.pin-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--r-full);
+  box-shadow: inset 0 0 0 2px var(--outline);
+  transition: background-color 0.15s, box-shadow 0.15s, transform 0.3s var(--spring-fast);
+}
+.pin-dot.is-on {
+  background: var(--primary);
+  box-shadow: none;
+  transform: scale(1.1);
+}
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px 16px;
+  max-width: 300px;
+  margin: 0 auto;
+}
+.key {
+  height: 60px;
+  border: 0;
+  border-radius: var(--r-full);
+  background: var(--surface-container-high);
+  color: var(--on-surface);
+  font-size: 24px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-radius 0.3s var(--spring-fast);
+}
+.key:active {
+  border-radius: var(--r-l);
+}
+.key--ghost {
+  background: transparent;
+  color: var(--on-surface-variant);
+}
+.hold {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
+  touch-action: none;
+  -webkit-touch-callout: none;
+}
+.hold__fill {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  color: var(--on-primary);
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.25s var(--emph);
+  pointer-events: none;
+}
+.hold.is-holding .hold__fill {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path var(--hold-ms, 1.6s) linear;
+}
+.hold.is-holding {
+  border-radius: var(--r-l);
+}
+.hold--danger .hold__fill {
+  background: var(--error);
+  color: var(--on-error);
+}
+.pin-msg.err {
+  color: var(--error);
 }
