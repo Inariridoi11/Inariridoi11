@@ -1,0 +1,74 @@
+[
+  {
+    "sku": "RES-10K-025W-100",
+    "name": "Resistencia 10 kΩ 1/4 W 5 % (pack 100)",
+    "stock": 34,
+    "locationCode": "G-01-1-01"
+  },
+  {
+    "sku": "CAP-EL-1000U-16V",
+    "name": "Condensador electrolítico 1000 µF 16 V 105 °C",
+    "stock": 58,
+    "locationCode": "G-01-1-02"
+  },
+  {
+    "sku": "CAP-CE-100N-50V-10",
+    "name": "Condensador cerámico 100 nF 50 V (pack 10)",
+    "stock": 41,
+    "locationCode": "G-01-1-03"
+  },
+  {
+    "sku": "DIO-1N4007-20",
+    "name": "Diodo 1N4007 1 A 1000 V (pack 20)",
+    "stock": 27,
+    "locationCode": "G-01-1-04"
+  },
+  {
+    "sku": "LED-5MM-RJ-50",
+    "name": "LED 5 mm rojo difuso (pack 50)",
+    "stock": 19,
+    "locationCode": "G-01-1-05"
+  },
+  {
+    "sku": "REG-LM7805-TO220",
+    "name": "Regulador LM7805 5 V 1,5 A TO-220",
+    "stock": 46,
+    "locationCode": "G-01-1-06"
+  },
+  {
+    "sku": "BOR-PI-25-3V",
+    "name": "Borna push-in 2,5 mm² 3 vías",
+    "stock": 120,
+    "locationCode": "G-01-2-01"
+  },
+  {
+    "sku": "INT-BAS-10A-NG",
+    "name": "Interruptor basculante 10 A 250 V negro",
+    "stock": 22,
+    "locationCode": "G-01-2-02"
+  },
+  {
+    "sku": "FUS-5X20-2A-10",
+    "name": "Fusible vidrio 5×20 mm 2 A rápido (pack 10)",
+    "stock": 38,
+    "locationCode": "G-01-2-03"
+  },
+  {
+    "sku": "TER-FAS-63-AZ-100",
+    "name": "Terminal faston hembra 6,3 mm aislado azul (pack 100)",
+    "stock": 15,
+    "locationCode": "G-01-2-04"
+  },
+  {
+    "sku": "CAB-H05VK-075-RJ",
+    "name": "Cable flexible H05V-K 0,75 mm² rojo (rollo 100 m)",
+    "stock": 6,
+    "locationCode": "A-01-1-02"
+  },
+  {
+    "sku": "SOL-SN60-1MM-250",
+    "name": "Estaño 60/40 1 mm (bobina 250 g)",
+    "stock": 11,
+    "locationCode": "A-01-1-03"
+  }
+]

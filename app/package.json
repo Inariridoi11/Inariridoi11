@@ -1,0 +1,27 @@
+{
+  "name": "pickled-app",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host",
+    "android": "npm run build && npx cap sync android && npx cap run android",
+    "sync": "npm run build && npx cap sync android",
+    "set-ip": "node scripts/set-ip.mjs"
+  },
+  "dependencies": {
+    "@capacitor-mlkit/barcode-scanning": "^8.2.2",
+    "@capacitor/android": "^8.6.0",
+    "@capacitor/core": "^8.6.0",
+    "@capacitor/preferences": "^8.0.1",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@fontsource/ibm-plex-sans": "^5.3.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.6.0",
+    "typescript": "~5.9.3",
+    "vite": "^8.3.6"
+  }
+}

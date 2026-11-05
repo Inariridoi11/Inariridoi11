@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  HTTP sin cifrar SOLO hacia el ESP32 en la red local.
+  Android no admite rangos de IP aquí: si cambias la IP del ESP32, ejecuta
+    npm run set-ip -- 192.168.1.77
+  y vuelve a compilar.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+    <domain-config cleartextTrafficPermitted="true">
+        <!-- pickled:hosts -->
+        <domain includeSubdomains="false">pickled.local</domain>
+        <domain includeSubdomains="false">192.168.1.50</domain>
+        <!-- /pickled:hosts -->
+    </domain-config>
+</network-security-config>

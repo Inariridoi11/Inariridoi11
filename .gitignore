@@ -1,0 +1,21 @@
+# Firmware
+firmware/include/config.h
+firmware/.pio/
+firmware/.vscode/
+
+# App
+node_modules/
+app/dist/
+app/android/.gradle/
+app/android/build/
+app/android/app/build/
+app/android/local.properties
+app/android/.idea/
+app/android/app/src/main/assets/public/
+app/android/capacitor-cordova-android-plugins/build/
+
+# Tools
+tools/labels.csv
+
+.DS_Store
+*.log

@@ -1,0 +1,187 @@
+{
+  "stripLength": 108,
+  "segments": [
+    {
+      "name": "Balda 1",
+      "start": 0,
+      "end": 47
+    },
+    {
+      "name": "Balda 2",
+      "start": 48,
+      "end": 95
+    },
+    {
+      "name": "Almacén",
+      "start": 96,
+      "end": 107
+    }
+  ],
+  "zoneLight": {
+    "start": 96,
+    "end": 107
+  },
+  "origin": 0,
+  "locations": [
+    {
+      "code": "G-01-1-01",
+      "kind": "lit",
+      "leds": {
+        "start": 1,
+        "end": 6
+      },
+      "anchor": 3,
+      "walkOrder": 0
+    },
+    {
+      "code": "G-01-1-02",
+      "kind": "lit",
+      "leds": {
+        "start": 9,
+        "end": 14
+      },
+      "anchor": 11,
+      "walkOrder": 1
+    },
+    {
+      "code": "G-01-1-03",
+      "kind": "lit",
+      "leds": {
+        "start": 17,
+        "end": 22
+      },
+      "anchor": 19,
+      "walkOrder": 2
+    },
+    {
+      "code": "G-01-1-04",
+      "kind": "lit",
+      "leds": {
+        "start": 25,
+        "end": 30
+      },
+      "anchor": 27,
+      "walkOrder": 3
+    },
+    {
+      "code": "G-01-1-05",
+      "kind": "lit",
+      "leds": {
+        "start": 33,
+        "end": 38
+      },
+      "anchor": 35,
+      "walkOrder": 4
+    },
+    {
+      "code": "G-01-1-06",
+      "kind": "lit",
+      "leds": {
+        "start": 41,
+        "end": 46
+      },
+      "anchor": 43,
+      "walkOrder": 5
+    },
+    {
+      "code": "G-01-2-01",
+      "kind": "lit",
+      "leds": {
+        "start": 49,
+        "end": 54
+      },
+      "anchor": 51,
+      "walkOrder": 6
+    },
+    {
+      "code": "G-01-2-02",
+      "kind": "lit",
+      "leds": {
+        "start": 57,
+        "end": 62
+      },
+      "anchor": 59,
+      "walkOrder": 7
+    },
+    {
+      "code": "G-01-2-03",
+      "kind": "lit",
+      "leds": {
+        "start": 65,
+        "end": 70
+      },
+      "anchor": 67,
+      "walkOrder": 8
+    },
+    {
+      "code": "G-01-2-04",
+      "kind": "lit",
+      "leds": {
+        "start": 73,
+        "end": 78
+      },
+      "anchor": 75,
+      "walkOrder": 9
+    },
+    {
+      "code": "G-01-2-05",
+      "kind": "lit",
+      "leds": {
+        "start": 81,
+        "end": 86
+      },
+      "anchor": 83,
+      "walkOrder": 10
+    },
+    {
+      "code": "G-01-2-06",
+      "kind": "lit",
+      "leds": {
+        "start": 89,
+        "end": 94
+      },
+      "anchor": 91,
+      "walkOrder": 11
+    },
+    {
+      "code": "A-01-1-01",
+      "kind": "zone",
+      "leds": {
+        "start": 96,
+        "end": 107
+      },
+      "anchor": 96,
+      "walkOrder": 12
+    },
+    {
+      "code": "A-01-1-02",
+      "kind": "zone",
+      "leds": {
+        "start": 96,
+        "end": 107
+      },
+      "anchor": 96,
+      "walkOrder": 13
+    },
+    {
+      "code": "A-01-1-03",
+      "kind": "zone",
+      "leds": {
+        "start": 96,
+        "end": 107
+      },
+      "anchor": 96,
+      "walkOrder": 14
+    },
+    {
+      "code": "A-01-1-04",
+      "kind": "zone",
+      "leds": {
+        "start": 96,
+        "end": 107
+      },
+      "anchor": 96,
+      "walkOrder": 15
+    }
+  ]
+}
