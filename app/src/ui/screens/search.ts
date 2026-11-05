@@ -143,7 +143,7 @@ export function searchScreen(app: App): Screen {
             headline: it.name,
             supporting: [
               h('span', { class: 'code' }, it.sku),
-              h('span', { class: it.stock === 0 ? 'err' : it.stock < 10 ? 'warn' : '' }, ` · ${it.stock} en stock`),
+              h('span', { class: it.stock === 0 ? 'err' : it.stock < 10 ? 'warn' : '' }, `${it.stock} en stock`),
             ],
             trailing: already
               ? h('button', { class: 'in-list rp', type: 'button', 'aria-label': `En lista: ${already}`, onclick: () => free && openAdd(it) }, icon('check', { size: 18 }), String(already))

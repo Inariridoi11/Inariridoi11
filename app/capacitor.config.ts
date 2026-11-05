@@ -4,9 +4,9 @@ const config: CapacitorConfig = {
   appId: 'es.pickled.demo',
   appName: 'PickLED',
   webDir: 'dist',
-  backgroundColor: '#F2FCEE',
+  backgroundColor: '#F7FBF2',
   android: {
-    backgroundColor: '#F2FCEE',
+    backgroundColor: '#F7FBF2',
   },
   plugins: {
     // Iconos oscuros en barras de sistema (la app es de fondo blanco).

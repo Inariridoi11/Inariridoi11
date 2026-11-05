@@ -17,7 +17,7 @@ export function summaryScreen(app: App): Screen {
     h(
       'div',
       { class: 'done' },
-      shape({ lobes: 12, depth: 0.06, cls: `shape--done${issues ? ' shape--warn' : ''}`, spin: true }, icon(issues ? 'warning' : 'done_all', { size: 44, fill: true })),
+      shape({ lobes: 12, depth: 0.06, cls: `shape--done${issues ? ' shape--warn' : ''}`, spin: true }, icon(issues ? 'warning' : 'done_all', { size: 38, fill: true })),
       h('h1', { class: 'done__title' }, 'Recogida terminada'),
       h('p', { class: 'done__sub' }, issues ? `${issues} ${issues === 1 ? 'línea incompleta' : 'líneas incompletas'}. Revisa antes de descontar.` : 'Todo cogido. Listo para descontar.'),
     ),
@@ -33,7 +33,7 @@ export function summaryScreen(app: App): Screen {
         listItem({
           leading: locLeading(st.locationCode),
           headline: st.name,
-          supporting: [h('span', { class: 'code' }, st.locationCode), ' · ', h('span', { class: 'code' }, st.sku)],
+          supporting: [h('span', { class: 'code' }, st.locationCode), h('span', { class: 'code' }, st.sku)],
           trailing: h(
             'div',
             { class: `result${st.status === 'short' ? ' result--short' : ''}` },
@@ -45,7 +45,7 @@ export function summaryScreen(app: App): Screen {
     ),
   );
 
-  const finish = h('button', { class: 'btn btn--filled btn--xl rp', type: 'button' }, icon('task_alt', { size: 28 }), 'Terminar y descontar');
+  const finish = h('button', { class: 'btn btn--filled btn--xl rp', type: 'button' }, icon('task_alt', { size: 24 }), 'Terminar y descontar');
   finish.addEventListener('click', async () => {
     finish.disabled = true;
     finish.lastChild!.textContent = 'Descontando…';

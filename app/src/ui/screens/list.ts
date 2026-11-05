@@ -29,7 +29,7 @@ export function listScreen(app: App): Screen {
         h(
           'div',
           { class: 'empty empty--big' },
-          shape({ lobes: 8, cls: 'shape--tonal shape--120' }, icon('checklist', { size: 48 })),
+          shape({ lobes: 8, cls: 'shape--tonal shape--120' }, icon('checklist', { size: 40 })),
           h('h2', null, 'La lista está vacía'),
           h('p', null, 'Busca artículos y añádelos para preparar el pedido.'),
           h('button', { class: 'btn btn--tonal rp', type: 'button', onclick: () => app.go('search') }, icon('search'), 'Buscar artículos'),
@@ -46,7 +46,7 @@ export function listScreen(app: App): Screen {
             return listItem({
               leading: locLeading(it.locationCode),
               headline: it.name,
-              supporting: [h('span', { class: 'code' }, it.sku), ` · ${it.stock} en stock`],
+              supporting: [h('span', { class: 'code' }, it.sku), h('span', null, `${it.stock} en stock`)],
               below: h(
                 'div',
                 { class: 'li__controls' },

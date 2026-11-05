@@ -198,7 +198,7 @@ export function pickScreen(app: App): Screen {
       h(
         'button',
         { class: `btn btn--filled btn--xl rp${error ? ' btn--danger' : ''}`, type: 'button', onclick: () => void doScan() },
-        icon('qr_code_scanner', { size: 30 }),
+        icon('qr_code_scanner', { size: 26 }),
         error ? 'Escanear de nuevo' : 'Cogido',
       ),
       h(
