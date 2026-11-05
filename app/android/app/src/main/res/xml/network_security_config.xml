@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   HTTP sin cifrar SOLO hacia el ESP32 en la red local.
-  Android no admite rangos de IP aquí: si cambias la IP del ESP32, ejecuta
-    npm run set-ip -- 192.168.1.77
-  y vuelve a compilar.
+  Android no admite rangos de IP aquí. Si cambias la IP del ESP32,
+  usa el script set-ip de app/package.json (ver README) y recompila.
 -->
 <network-security-config>
     <base-config cleartextTrafficPermitted="false" />
