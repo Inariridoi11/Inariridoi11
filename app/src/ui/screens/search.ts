@@ -166,7 +166,7 @@ export function searchScreen(app: App): Screen {
   void run();
 
   const top = topBar({ title: brand(), trailing: app.statusChip() });
-  const body = h('section', { class: 'pad' }, h('div', { class: 'search-sticky' }, bar, chips), meta, results);
+  const body = h('section', { class: `pad${app.list.length ? ' pad--fab' : ''}` }, h('div', { class: 'search-sticky' }, bar, chips), meta, results);
 
   const units = app.list.reduce((a, l) => a + l.qty, 0);
   const fab = app.list.length

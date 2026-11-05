@@ -3,7 +3,8 @@ import type { Item } from '../domain/types';
 import type { DecrementLine, DecrementResult, StockProvider } from './StockProvider';
 import seed from '../data/items.seed.json';
 
-const KEY = 'stock.v1';
+// Cambiar la versión al cambiar la semilla: así el teléfono carga el inventario nuevo.
+const KEY = 'stock.v2';
 
 const norm = (s: string) =>
   s

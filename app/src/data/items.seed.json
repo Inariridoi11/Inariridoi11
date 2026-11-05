@@ -6,33 +6,33 @@
     "locationCode": "G-01-1-01"
   },
   {
-    "sku": "CAP-EL-1000U-16V",
-    "name": "Condensador electrolítico 1000 µF 16 V 105 °C",
-    "stock": 58,
+    "sku": "RES-330R-025W-100",
+    "name": "Resistencia 330 Ω 1/4 W 5 % (pack 100)",
+    "stock": 18,
     "locationCode": "G-01-1-02"
   },
   {
-    "sku": "CAP-CE-100N-50V-10",
-    "name": "Condensador cerámico 100 nF 50 V (pack 10)",
-    "stock": 41,
+    "sku": "CAP-EL-1000U-16V",
+    "name": "Condensador electrolítico 1000 µF 16 V 105 °C",
+    "stock": 22,
     "locationCode": "G-01-1-03"
   },
   {
-    "sku": "DIO-1N4007-20",
-    "name": "Diodo 1N4007 1 A 1000 V (pack 20)",
-    "stock": 27,
+    "sku": "CON-JST-SM3-10",
+    "name": "Conector JST SM 3 pines macho + hembra (pack 10)",
+    "stock": 15,
     "locationCode": "G-01-1-04"
   },
   {
-    "sku": "LED-5MM-RJ-50",
-    "name": "LED 5 mm rojo difuso (pack 50)",
-    "stock": 19,
+    "sku": "CAB-DUP-HH20-40",
+    "name": "Cables Dupont hembra-hembra 20 cm (pack 40)",
+    "stock": 9,
     "locationCode": "G-01-1-05"
   },
   {
-    "sku": "REG-LM7805-TO220",
-    "name": "Regulador LM7805 5 V 1,5 A TO-220",
-    "stock": 46,
+    "sku": "CON-DC-5521-5",
+    "name": "Conector DC jack hembra 5,5×2,1 mm con borna (pack 5)",
+    "stock": 12,
     "locationCode": "G-01-1-06"
   },
   {
@@ -48,27 +48,51 @@
     "locationCode": "G-01-2-02"
   },
   {
-    "sku": "FUS-5X20-2A-10",
-    "name": "Fusible vidrio 5×20 mm 2 A rápido (pack 10)",
-    "stock": 38,
+    "sku": "ESP-WROOM32-CP2102",
+    "name": "Placa ESP32-WROOM-32 DevKit 38 pines (CP2102)",
+    "stock": 8,
     "locationCode": "G-01-2-03"
   },
   {
-    "sku": "TER-FAS-63-AZ-100",
-    "name": "Terminal faston hembra 6,3 mm aislado azul (pack 100)",
-    "stock": 15,
+    "sku": "CAB-USB-MICRO-1M",
+    "name": "Cable USB-A a micro-USB 1 m (datos)",
+    "stock": 14,
     "locationCode": "G-01-2-04"
   },
   {
-    "sku": "CAB-H05VK-075-RJ",
-    "name": "Cable flexible H05V-K 0,75 mm² rojo (rollo 100 m)",
+    "sku": "TZE-231-12MM",
+    "name": "Cinta Brother TZe-231 12 mm negro sobre blanco",
+    "stock": 11,
+    "locationCode": "G-01-2-05"
+  },
+  {
+    "sku": "CAB-3H-22AWG-10M",
+    "name": "Cable 3 hilos 22 AWG para tira LED (rollo 10 m)",
     "stock": 6,
+    "locationCode": "G-01-2-06"
+  },
+  {
+    "sku": "LED-WS2812B-60-5M",
+    "name": "Tira LED WS2812B 60 LED/m 5 V (bobina 5 m)",
+    "stock": 5,
+    "locationCode": "A-01-1-01"
+  },
+  {
+    "sku": "ALI-5V3A-15W",
+    "name": "Fuente de alimentación 5 V 3 A (15 W)",
+    "stock": 7,
     "locationCode": "A-01-1-02"
   },
   {
-    "sku": "SOL-SN60-1MM-250",
-    "name": "Estaño 60/40 1 mm (bobina 250 g)",
-    "stock": 11,
+    "sku": "PRF-ALU-LED-1M",
+    "name": "Perfil de aluminio para tira LED con difusor (1 m)",
+    "stock": 10,
     "locationCode": "A-01-1-03"
+  },
+  {
+    "sku": "ROT-BRO-PTE550W",
+    "name": "Rotuladora Brother PT-E550W",
+    "stock": 2,
+    "locationCode": "A-01-1-04"
   }
 ]

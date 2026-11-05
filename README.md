@@ -94,7 +94,7 @@ En Pro Label Tool, crea una etiqueta con un QR y un texto, importa `labels.csv` 
 ## Datos de la demo
 
 - `app/src/data/layout.json`: ubicaciones, rangos de LED y orden de recorrido. Hay 6 huecos de 8 LED por balda y se encienden los 6 centrales, así los huecos contiguos se distinguen. Las cuatro ubicaciones `A-01-1-0x` (cajones del almacén) comparten la luz de zona (96–107).
-- `app/src/data/items.seed.json`: 12 artículos (10 en balda y 2 en almacén).
+- `app/src/data/items.seed.json`: 16 artículos, los componentes del propio montaje (12 en balda, 4 en almacén). Si cambias la semilla, sube la versión de `KEY` en `LocalStockProvider.ts` para que el teléfono cargue el inventario nuevo.
 - **Ajustes protegidos.** La IP del ESP32, el modo simulador y "Restaurar datos de demo" están bajo **PIN de administrador: `2468`**. El PIN se cambia en `ADMIN_PIN`, en `app/src/settings/settings.ts`. Tras desbloquear, Ajustes se vuelve a bloquear solo al salir de la pantalla o a los 2 minutos. Además, guardar la IP y restaurar los datos exigen mantener pulsado el botón, y la IP se valida antes de guardarla. Brillo, velocidad y color quedan libres, porque no pueden romper nada.
 - El stock se guarda en el teléfono. Para repetir tomas de vídeo con el stock inicial: **Ajustes → Restaurar datos de demo**.
 - Diseño: Material 3 Expressive con Google Sans Flex y Google Sans Code (OFL, incluidas en la app, sin internet). Los iconos son un subconjunto de Material Symbols Rounded; si añades uno, edita la lista en `app/scripts/build-icons.py` y ejecútalo (`pip install fonttools brotli`).
